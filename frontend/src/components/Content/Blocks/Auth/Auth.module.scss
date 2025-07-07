@@ -1,0 +1,103 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .title {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #212020;
+    font-size: 28px;
+    line-height: 36px;
+  }
+  .subtitle {
+    margin-bottom: 35px;
+    text-align: center;
+    color: #696969;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .input_box {
+    width: 100%;
+    margin-bottom: 20px;
+    input {
+      width: 100%;
+      font-family: "Poppins", sans-serif;
+      &:placeholder {
+        font-family: "Poppins", sans-serif;
+      }
+    }
+  }
+  .button_box {
+    width: 100%;
+    margin: 10px auto 0;
+    height: 56px;
+    font-family: "Poppins", sans-serif;
+    background-color: #ff8000;
+    &:hover {
+      background-color: #aa5908;
+    }
+  }
+  .checkbox_box {
+    margin-bottom: 10px;
+    label {
+      margin: 0;
+    }
+    div span {
+      color: #696969;
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+  .text {
+    margin-top: 20px;
+    color: #696969;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    a {
+      color: #1324e3;
+    }
+  }
+}
+.formSettings {
+  max-width: 500px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.message {
+  width: 100%;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: -moz-fit-content;
+  padding: 8px 15px;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 13px;
+  border: 1px solid transparent;
+}
+.error {
+  border-color: rgb(249, 80, 80);
+  color: rgb(249, 80, 80);
+}
+.success {
+  border-color: rgb(12, 133, 68);
+  color: rgb(12, 133, 68);
+}
+.loadingOn {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  margin-left: 20px;
+}
+.loadingOff {
+  display: none;
+}
+.progressIcon {
+  margin-left: 10px;
+  width: 30px !important;
+  height: 30px !important;
+}
