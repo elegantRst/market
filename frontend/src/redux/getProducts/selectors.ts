@@ -1,3 +1,3 @@
-import { RootState } from 'redux/store';
+import type { RootState } from '../store';
 
 export const SelectGetProducts = (state: RootState) => state.products;

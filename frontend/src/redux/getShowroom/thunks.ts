@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { instance } from 'utils/axios';
+import { instance } from '@/utils/axios';
 
 export const fetchShowroom = createAsyncThunk(
 	'cards/fetchShowroomStatus',

@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import AddToCartBtn from '@/components/Content/Elements/Buttons/AddToCartBtn';
+import ViewBtn from '@/components/Content/Elements/Buttons/ViewBtn';
+import { SelectAuth } from '@/redux/auth/selectors';
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import ViewBtn from 'components/Content/Elements/Buttons/ViewBtn';
-import AddToCartBtn from 'components/Content/Elements/Buttons/AddToCartBtn';
 import styles from './SliderHot.module.scss';
 
 const SliderHot = () => {
@@ -18,7 +20,8 @@ const SliderHot = () => {
 		infinite: true,
 	};
 
-	const { productsAll } = useSelector(state => state.products);
+	const { productsAll } = useSelector(SelectGetProducts);
+	const { isLogged } = useSelector(SelectAuth);
 
 	const findProducts = productsAll?.filter(item => {
 		return item?.hotImage;
@@ -42,7 +45,7 @@ const SliderHot = () => {
 						</Link>
 						<div className={styles.slide__info_links}>
 							<ViewBtn itemId={item?.id} />
-							<AddToCartBtn item={item} />
+							{isLogged && <AddToCartBtn item={item} />}
 						</div>
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Status } from 'redux/getProducts/types';
-import { getGraphics } from './thunks';
-import { getGraphicsSliceState } from './types';
+import { fetchGraphics } from './thunks';
+import type { getGraphicsSliceState } from './types';
+import { Status } from '../getProducts/types';
 
 const initialState: getGraphicsSliceState = {
 	status: Status.LOADING,
@@ -13,19 +13,17 @@ export const getGraphicsSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
-		builder.addCase(getGraphics.pending, state => {
+		builder.addCase(fetchGraphics.pending, state => {
 			state.status = Status.LOADING;
 		});
-		builder.addCase(getGraphics.fulfilled, (state, action) => {
-			state.favorites = action.payload.data;
+		builder.addCase(fetchGraphics.fulfilled, (state, action) => {
+			state.favorites = action.payload;
 			state.status = Status.SUCCESS;
 		});
-		builder.addCase(getGraphics.rejected, state => {
+		builder.addCase(fetchGraphics.rejected, state => {
 			state.status = Status.ERROR;
 		});
 	},
 });
-
-export const {} = getGraphicsSlice.actions;
 
 export default getGraphicsSlice.reducer;

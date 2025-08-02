@@ -1,3 +1,3 @@
-import { RootState } from "redux/store";
+import type { RootState } from '../store';
 
 export const SelectNotification = (state: RootState) => state.notification;

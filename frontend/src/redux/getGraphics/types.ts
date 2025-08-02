@@ -1,9 +1,9 @@
 export type AreaGraphic = {
-  name: string;
-  values: any;
+	name: string;
+	values: string;
 };
 
 export interface getGraphicsSliceState {
-  status: string;
-  favorites: any;
+	status: string;
+	favorites: any;
 }

@@ -1,8 +1,10 @@
-import qs from 'qs';
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from 'redux/store';
+import Banner from '@/components/Content/Blocks/Banner/Banner';
+import Brands from '@/components/Content/Blocks/Brands/Brands';
+import Breadcrumbs from '@/components/Content/Blocks/Breadcrumbs/Breadcrumbs';
+import Catalog from '@/components/Content/Blocks/Catalog/Catalog';
+import Subscribe from '@/components/Content/Blocks/Subscribe/Subscribe';
+import { menuList } from '@/redux/filters/consts';
+import { SelectFilters } from '@/redux/filters/selectors';
 import {
 	setActiveCategory,
 	setActiveColor,
@@ -10,15 +12,13 @@ import {
 	setCurrentPage,
 	setFilterUrl,
 	setMenuUrlValue,
-} from 'redux/filters/slice';
-import { SelectFilters } from 'redux/filters/selectors';
-import Banner from 'components/Content/Blocks/Banner/Banner';
-import Brands from 'components/Content/Blocks/Brands/Brands';
-import Breadcrumbs from 'components/Content/Blocks/Breadcrumbs/Breadcrumbs';
-import Catalog from 'components/Content/Blocks/Catalog/Catalog';
-import Subscribe from 'components/Content/Blocks/Subscribe/Subscribe';
-import { menuList } from 'redux/filters/consts';
-import { fetchProductsByFilter } from 'redux/getProducts/thunks';
+} from '@/redux/filters/slice';
+import { fetchProductsByFilter } from '@/redux/getProducts/thunks';
+import { useAppDispatch } from '@/redux/store';
+import qs from 'qs';
+import { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const CatalogPage = () => {
 	const dispatch = useAppDispatch();
@@ -66,7 +66,7 @@ const CatalogPage = () => {
 		getCards();
 
 		isMounted.current = true;
-	}, []);
+	}, [dispatch]);
 
 	// Обновление URL при изменении фильтров
 	useEffect(() => {

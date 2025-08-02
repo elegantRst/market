@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Status } from 'redux/getProducts/types';
 import { fetchBlog } from './thunks';
-import { BlogSliceState } from './types';
+import type { BlogSliceState } from './types';
+import { Status } from '../getProducts/types';
 
 const initialState: BlogSliceState = {
 	posts: [],

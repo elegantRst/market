@@ -1,16 +1,19 @@
-import styles from "./Buttons.module.scss";
-import { OnClickAddToCart } from "utils/onClickAddToCart";
-import { useSelector } from "react-redux";
-import { SelectAuth } from "redux/auth/selectors";
+import { OnClickAddToCart } from '@/utils/onClickAddToCart';
+import styles from './Buttons.module.scss';
 
-const AddToCartBtn = ({ item }) => {
-  const { isLogged } = useSelector(SelectAuth);
+type AddToCartBtnPropsType = {
+	item: any;
+};
 
-  return (
-    <>
-      <div className={`${styles.slide__info_link} icon_shopping_basket`} onClick={() => OnClickAddToCart(item, isLogged)}></div>
-    </>
-  );
+const AddToCartBtn: React.FC<AddToCartBtnPropsType> = ({ item }) => {
+	return (
+		<>
+			<div
+				className={`${styles.slide__info_link} icon_shopping_basket`}
+				onClick={() => OnClickAddToCart(item)}
+			></div>
+		</>
+	);
 };
 
 export default AddToCartBtn;

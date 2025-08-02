@@ -4,9 +4,9 @@ import authSlice from './auth/slice';
 import cartSlice from './cart/slice';
 import filtersSlice from './filters/slice';
 import getBlogSlice from './getBlog/slice';
+import getFeedbacksSlice from './getFeedbacks/slice';
 import getGraphicsSlice from './getGraphics/slice';
 import getProductsSlice from './getProducts/slice';
-import getReviewsSlice from './getReview/slice';
 import getShowroomSlice from './getShowroom/slice';
 import notificationSlice from './notification/slice';
 
@@ -16,7 +16,7 @@ export const store = configureStore({
 		cart: cartSlice,
 		filters: filtersSlice,
 		showroom: getShowroomSlice,
-		reviews: getReviewsSlice,
+		feedbacks: getFeedbacksSlice,
 		blog: getBlogSlice,
 		auth: authSlice,
 		graphics: getGraphicsSlice,

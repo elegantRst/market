@@ -1,13 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserFromLs } from 'utils/authLS/getUserFromLS';
-import { AuthSliceState } from './types';
-import { Success } from 'errors';
+import moment from 'moment';
+import { getUserFromLs } from '@/utils/authLS/getUserFromLS';
 import { getUser, loginUser, registerUser } from './thunks';
+import type { AuthSliceState } from './types';
+import { Success } from '@/errors';
 
 const { user } = getUserFromLs();
 
+const getUserData = () => {
+	if (user?.user && user.user.createdAt && user.user.updatedAt) {
+		return {
+			user: user.user,
+			createdDate: moment(user.user.createdAt).format('DD.MM.YY'),
+			createdTime: moment(user.user.createdAt).format('HH:mm'),
+			updatedDate: moment(user.user.updatedAt).format('DD.MM.YY'),
+			updatedTime: moment(user.user.updatedAt).format('HH:mm'),
+		};
+	} else {
+		return {
+			user: user.user || null,
+			createdDate: '',
+			createdTime: '',
+			updatedDate: '',
+			updatedTime: '',
+		};
+	}
+};
+
 const initialState: AuthSliceState = {
-	user: user,
+	...getUserData(),
 	isLogged: Object.keys(user).length !== 0,
 	registerModalStatus: false,
 	loginModalStatus: false,
@@ -22,8 +43,10 @@ export const authSlice = createSlice({
 		logout(state) {
 			state.isLogged = false;
 			localStorage.removeItem('user');
-			localStorage.removeItem('userCart');
-			localStorage.removeItem('userReviews');
+			localStorage.removeItem('cart');
+			localStorage.removeItem('notification');
+			localStorage.removeItem('feedbacks');
+			window.location.reload();
 		},
 		setRegisterModalStatus(state, action) {
 			state.registerModalStatus = action.payload;
@@ -46,6 +69,9 @@ export const authSlice = createSlice({
 				state.requestError = Success.successLogin;
 				state.isLogged = true;
 				state.isLoading = false;
+				setTimeout(() => {
+					window.location.reload();
+				}, 2000);
 			} else {
 				state.requestError = action.payload;
 				state.isLoading = false;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { FiltersSliceState } from './types';
 import { defaultPriceMax, defaultPriceMin, menuList, sortList } from './consts';
+import type { FiltersSliceState } from './types';
 
 const initialState: FiltersSliceState = {
 	activeCategory: '',

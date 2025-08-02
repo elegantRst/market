@@ -1,48 +1,42 @@
+import StarRating from '@/components/Content/Elements/StarRating/StarRating';
+import { SelectAuth } from '@/redux/auth/selectors';
+import { categoriesList } from '@/redux/filters/consts';
+import { SelectFeedbacks } from '@/redux/getFeedbacks/selectors';
+import type { FeedbacksType } from '@/redux/getFeedbacks/types';
+import { Status, type ProductType } from '@/redux/getProducts/types';
+import { formatNumber } from '@/utils/formatNumbers';
+import { normalize_count_form_feedbacks } from '@/utils/normalizeWordsForm';
+import { OnClickAddToCart } from '@/utils/onClickAddToCart';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-
-import { SelectReviews } from 'redux/getReview/selectors';
-import { formatNumber } from 'utils/formatNumbers';
-import { normalize_count_form_reviews } from 'utils/normalizeWordsForm';
-
-import styles from './ProductInfo.module.scss';
-
-import StarRating from 'components/Content/Elements/StarRating/StarRating';
-import { SelectAuth } from 'redux/auth/selectors';
-import { categoriesList } from 'redux/filters/consts';
-import { ReviewType } from 'redux/getReview/types';
-import { OnClickAddToCart } from 'utils/onClickAddToCart';
 import SliderProduct from '../Sliders/SliderProduct/SliderProduct';
-import { ProductType } from 'redux/getProducts/types';
+import styles from './ProductInfo.module.scss';
 
 type ProductInfoProps = {
 	findProduct: ProductType;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ findProduct }) => {
-	const { status, reviews } = useSelector(SelectReviews);
+	const { status, feedbacks } = useSelector(SelectFeedbacks);
 	const { isLogged } = useSelector(SelectAuth);
+	const { hash, key } = useLocation();
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const { hash, key } = useLocation();
 	useEffect(() => {
-		if (hash) {
+		if (hash && hash.length > 1) {
 			const targetElement = document.getElementById(hash.substring(1));
 			targetElement?.scrollIntoView({ behavior: 'smooth' });
 		}
 	}, [key, hash]);
 
-	let resultReviews = {};
-	if (status === 'SUCCESS') {
-		const filterBy = (reviews: ReviewType[], field: string, value: number) => {
-			return reviews.filter((item: ReviewType) => item[field] === value);
-		};
-		resultReviews = filterBy(reviews, 'productId', findProduct.id);
-	}
+	const resultFeedbacks: FeedbacksType[] =
+		status === Status.SUCCESS
+			? feedbacks.filter(item => item.productId === findProduct.id)
+			: [];
 
 	return (
 		<>
@@ -59,15 +53,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ findProduct }) => {
 							<div className={styles.product_info__information_rate}>
 								<StarRating rating={findProduct?.rating} editValue={false} />
 							</div>
-							<div className={styles.product_info__information_reviews}>
-								{Object.values(resultReviews).length}{' '}
-								{normalize_count_form_reviews(
-									Object.values(resultReviews).length
-								)}
+							<div className={styles.product_info__information_feedbacks}>
+								{resultFeedbacks.length}
+								{normalize_count_form_feedbacks(resultFeedbacks.length)}
 							</div>
 							<Link
-								className={styles.product_info__information_addreviews}
-								to='#reviews'
+								className={styles.product_info__information_addfeedbacks}
+								to='#feedbacks'
 							>
 								Добавить отзыв
 							</Link>
@@ -80,15 +72,17 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ findProduct }) => {
 								</span>
 							</div>
 						</div>
-						<div className={styles.product_info__information_buy_box}>
-							<button
-								className={styles.product_info__card__form_button}
-								type='button'
-								onClick={() => OnClickAddToCart(findProduct, isLogged)}
-							>
-								<i className='icon_shopping_basket'></i>В корзину
-							</button>
-						</div>
+						{isLogged && (
+							<div className={styles.product_info__information_buy_box}>
+								<button
+									className={styles.product_info__card__form_button}
+									type='button'
+									onClick={() => OnClickAddToCart(findProduct)}
+								>
+									<i className='icon_shopping_basket'></i>В корзину
+								</button>
+							</div>
+						)}
 						<div className={styles.product_info__information_text_box}>
 							<div className={styles.product_info__information_text_title}>
 								Описание:

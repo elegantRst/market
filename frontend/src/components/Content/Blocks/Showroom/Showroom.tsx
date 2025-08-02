@@ -1,11 +1,8 @@
+import { Status } from '@/redux/getProducts/types';
+import { SelectShowroom } from '@/redux/getShowroom/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-import { Status } from 'redux/getProducts/types';
-import { SelectShowroom } from 'redux/getShowroom/selectors';
-
 import Card from './Card/Card';
-
 import styles from './Showroom.module.scss';
 
 const Showroom: React.FC = () => {

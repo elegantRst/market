@@ -1,23 +1,20 @@
+import Card from '@/components/Content/Elements/Card/Card';
+import Featured from '@/components/Content/Elements/Featured/Featured';
+import FilterCategory from '@/components/Content/Elements/Filters/FilterCategory/FilterCategory';
+import FilterColor from '@/components/Content/Elements/Filters/FilterColor/FilterColor';
+import FilterPrice from '@/components/Content/Elements/Filters/FilterPrice/FilterPrice';
+import FilterRating from '@/components/Content/Elements/Filters/FilterRating/FilterRating';
+import FilterSortby from '@/components/Content/Elements/Filters/FilterSortby/FilterSortby';
+import ResetFilters from '@/components/Content/Elements/Filters/ResetFilters/ResetFilters';
+import Pagination from '@/components/Content/Elements/Pagination/Pagination';
+import { SelectFilters } from '@/redux/filters/selectors';
+import { setFilterResults } from '@/redux/filters/slice';
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
+import { Status } from '@/redux/getProducts/types';
+import { useAppDispatch } from '@/redux/store';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
-import { SelectFilters } from 'redux/filters/selectors';
-import { setFilterResults } from 'redux/filters/slice';
-import { Status } from 'redux/getProducts/types';
-import { useAppDispatch } from 'redux/store';
-
-import Card from 'components/Content/Elements/Card/Card';
-import Featured from 'components/Content/Elements/Featured/Featured';
-import FilterCategory from 'components/Content/Elements/Filters/FilterCategory/FilterCategory';
-import FilterColor from 'components/Content/Elements/Filters/FilterColor/FilterColor';
-import FilterPrice from 'components/Content/Elements/Filters/FilterPrice/FilterPrice';
-import FilterRating from 'components/Content/Elements/Filters/FilterRating/FilterRating';
-import FilterSortby from 'components/Content/Elements/Filters/FilterSortby/FilterSortby';
-import ResetFilters from 'components/Content/Elements/Filters/ResetFilters/ResetFilters';
-import Pagination from 'components/Content/Elements/Pagination/Pagination';
-
 import styles from './Catalog.module.scss';
-import { SelectGetProducts } from 'redux/getProducts/selectors';
 
 const Catalog = () => {
 	const dispatch = useAppDispatch();
@@ -31,7 +28,7 @@ const Catalog = () => {
 
 	useEffect(() => {
 		dispatch(setFilterResults({ ...resultCatalog }));
-	}, [activeSort, activeShow]);
+	}, [activeSort, activeShow, dispatch]);
 
 	const cards =
 		products.length > 0 ? (

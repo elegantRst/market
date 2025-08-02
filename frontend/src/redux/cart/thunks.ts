@@ -1,41 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { instance } from 'utils/axios';
-import { CardTypeInCart } from './types';
+import { instanceCart } from '@/utils/axios';
+import type { CardTypeInCart } from './types';
 
-export const fetchCartInProfile = createAsyncThunk(
-	'',
-	async (token: string, { rejectWithValue }) => {
-		try {
-			const userCart = await axios
-				.create({
-					baseURL: 'http://localhost:5000/',
-					timeout: 1000,
-					headers: {
-						'X-Custom-Header': 'foobar',
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.get('cart/get');
-			const jsonUserCart = JSON.stringify(userCart?.data);
-			localStorage.setItem('userCart', jsonUserCart);
-			return userCart.data;
-		} catch (error: any) {
-			if (error.response && error.response.data.message) {
-				return rejectWithValue(error.response.data.message);
-			} else {
-				return rejectWithValue(error.message);
-			}
-		}
-	}
-);
-
-export const pushCartToProfile = createAsyncThunk(
-	'cart/create',
+export const addToCart = createAsyncThunk(
+	'cart/add',
 	async (data: CardTypeInCart, { rejectWithValue }) => {
 		try {
-			const newCartInProfile = instance.post(`cart/create`, data);
-			return newCartInProfile;
+			const cart = await instanceCart.post(`/add`, data);
+			return cart;
 		} catch (error: any) {
 			if (error.response && error.response.data.message) {
 				return rejectWithValue(error.response.data.message);
@@ -46,12 +18,12 @@ export const pushCartToProfile = createAsyncThunk(
 	}
 );
 
-export const plusCartItemToProfile = createAsyncThunk(
-	'cart/plus-item',
+export const plusToCart = createAsyncThunk(
+	'cart/plus',
 	async (data: CardTypeInCart, { rejectWithValue }) => {
 		try {
-			const newCartInProfile = instance.post(`cart/plus-item`, data);
-			return newCartInProfile;
+			const cart = await instanceCart.post(`/plus`, data);
+			return cart;
 		} catch (error: any) {
 			if (error.response && error.response.data.message) {
 				return rejectWithValue(error.response.data.message);
@@ -62,12 +34,12 @@ export const plusCartItemToProfile = createAsyncThunk(
 	}
 );
 
-export const minusCartItemToProfile = createAsyncThunk(
-	'cart/minus-item',
+export const minusTocart = createAsyncThunk(
+	'cart/minus',
 	async (data: CardTypeInCart, { rejectWithValue }) => {
 		try {
-			const newCartInProfile = instance.post(`cart/minus`, data);
-			return newCartInProfile;
+			const cart = await instanceCart.post(`/minus`, data);
+			return cart;
 		} catch (error: any) {
 			if (error.response && error.response.data.message) {
 				return rejectWithValue(error.response.data.message);
@@ -78,11 +50,46 @@ export const minusCartItemToProfile = createAsyncThunk(
 	}
 );
 
-export const clearCartInProfile = createAsyncThunk(
+export const deleteFromCart = createAsyncThunk(
+	'cart/delete',
+	async (productId: any, { rejectWithValue }) => {
+		try {
+			const cart = await instanceCart.delete(`/delete?productId=` + productId);
+			return cart;
+		} catch (error: any) {
+			if (error.response && error.response.data.message) {
+				return rejectWithValue(error.response.data.message);
+			} else {
+				return rejectWithValue(error.message);
+			}
+		}
+	}
+);
+
+export const clearCart = createAsyncThunk(
 	'cart/clear',
-	async (userId: any, { rejectWithValue }) => {
+	async (_, { rejectWithValue }) => {
 		try {
-			return instance.delete('cart', userId);
+			const cart = await instanceCart.delete('/clear');
+			return cart;
+		} catch (error: any) {
+			if (error.response && error.response.data.message) {
+				return rejectWithValue(error.response.data.message);
+			} else {
+				return rejectWithValue(error.message);
+			}
+		}
+	}
+);
+
+export const fetchGetCart = createAsyncThunk(
+	'cart/get',
+	async (_, { rejectWithValue }) => {
+		try {
+			const cart = await instanceCart.get('/get');
+			const jsonCart = JSON.stringify(cart.data.cart);
+			localStorage.setItem('cart', jsonCart);
+			return cart;
 		} catch (error: any) {
 			if (error.response && error.response.data.message) {
 				return rejectWithValue(error.response.data.message);

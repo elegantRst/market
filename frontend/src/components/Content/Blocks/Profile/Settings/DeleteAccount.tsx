@@ -1,46 +1,70 @@
-import { AlertColor, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { useAppDispatch } from "redux/store";
-import { logout } from "redux/auth/slice";
-import Alert from "components/Content/Elements/AlertComponent/AlertComponent";
+import { logout, setRequestError } from '@/redux/auth/slice';
+import { useAppDispatch } from '@/redux/store';
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
-import LoadingButton from "@mui/lab/LoadingButton";
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import styles from "../../Auth/Auth.module.scss";
-import { SelectAuth } from "redux/auth/selectors";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { deleteAccount } from "redux/auth/thunks";
+import RequestError from '@/components/Content/Elements/RequestError/RequestError';
+import { Success } from '@/errors';
+import { SelectAuth } from '@/redux/auth/selectors';
+import { deleteAccount } from '@/redux/auth/thunks';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import styles from '../../../Elements/Modals/AuthModals/AuthModal.module.scss';
 
 const DeleteAccount = () => {
-  const dispatch = useAppDispatch();
-  const { user } = useSelector(SelectAuth);
-  const [open, setOpen] = useState(false);
-  const [severity, setSeverity] = useState<AlertColor>("success");
+	const dispatch = useAppDispatch();
+	const { user } = useSelector(SelectAuth);
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    dispatch(deleteAccount(user.user.id));
-    setOpen(true);
-    logout();
-    localStorage.removeItem("user");
-  };
+	const { handleSubmit } = useForm({});
 
-  return (
-    <>
-      <form className={`${styles.form} ${styles.formSettings}`} onSubmit={handleSubmit}>
-        <h2 className={styles.subtitle}>
-          После удаления аккаунта, персональные данные <br /> восстановлению не подлежат
-        </h2>
-        <FormGroup className={styles.checkbox_box}>
-          <FormControlLabel required control={<Checkbox />} label="Подтвердите удаление" />
-        </FormGroup>
-        <LoadingButton className={styles.button_box} variant="contained" type="submit">
-          Удалить аккаунт
-        </LoadingButton>
-      </form>
-      <Alert open={open} severity={severity} text="Аккаунт успешно удалён" />
-    </>
-  );
+	const onSubmit = async () => {
+		dispatch(setRequestError(''));
+		try {
+			const res = await dispatch(deleteAccount(user.id));
+			if ('error' in res) {
+				const errorMessage = res.payload || res.error.message;
+				dispatch(setRequestError(errorMessage));
+			} else {
+				dispatch(setRequestError(Success.successDeleteUser));
+				setTimeout(() => {
+					dispatch(logout());
+					dispatch(setRequestError(''));
+				}, 2000);
+			}
+		} catch (error) {
+			dispatch(setRequestError('Произошла ошибка при удалении аккаунта'));
+		}
+	};
+
+	return (
+		<>
+			<form
+				className={`${styles.form} ${styles.formSettings}`}
+				onSubmit={handleSubmit(onSubmit)}
+			>
+				<h2 className={styles.subtitle}>
+					После удаления аккаунта, персональные данные <br /> восстановлению не
+					подлежат
+				</h2>
+				<FormGroup className={styles.checkbox_box}>
+					<FormControlLabel
+						required
+						control={<Checkbox />}
+						label='Подтвердите удаление'
+					/>
+				</FormGroup>
+				<RequestError error={Success.successDeleteUser} />
+				<LoadingButton
+					className={styles.button_box}
+					variant='contained'
+					type='submit'
+				>
+					Удалить аккаунт
+				</LoadingButton>
+			</form>
+		</>
+	);
 };
 
 export default DeleteAccount;

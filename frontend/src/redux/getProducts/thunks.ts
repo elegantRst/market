@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FetchProductsArgs } from './types';
-import { instance } from 'utils/axios';
+import { instance } from '@/utils/axios';
+import type { FetchProductsArgs } from './types';
 
 export const fetchProducts = createAsyncThunk('products', async () => {
 	const { data } = await instance.get(`/products/getAll`);

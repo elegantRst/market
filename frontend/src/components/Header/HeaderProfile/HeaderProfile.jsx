@@ -1,26 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
-
-import { useSelector } from 'react-redux';
-import { SelectAuth } from 'redux/auth/selectors';
-import { useAppDispatch } from 'redux/store';
+import { SelectAuth } from '@/redux/auth/selectors';
 import {
 	logout,
 	setLoginModalStatus,
 	setRegisterModalStatus,
-} from 'redux/auth/slice';
-
+} from '@/redux/auth/slice';
+import { useAppDispatch } from '@/redux/store';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../Header.module.scss';
-import { useState } from 'react'; 
 
 const HeaderProfile = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { user, isLogged } = useSelector(SelectAuth);
-
-	const [localCart, setLocalCart] = useState([]);
-	const [userCart, setUserCart] = useState([]);
 
 	const Register = () => {
 		dispatch(setRegisterModalStatus(true));
@@ -34,7 +27,7 @@ const HeaderProfile = () => {
 		dispatch(logout());
 		localStorage.removeItem('user');
 		navigate('/');
-		// window.location.reload();
+		window.location.reload();
 	};
 
 	return (
@@ -44,7 +37,7 @@ const HeaderProfile = () => {
 					<div className={styles.header__profile_isauth}>
 						<Link
 							className={styles.header__profile_avatar}
-							to={`profile/${user?.user?.id}`}
+							to={`profile/${user?.id}`}
 						>
 							<AccountBoxIcon />
 						</Link>

@@ -1,19 +1,34 @@
-import { CardTypeInCart } from "redux/cart/types";
+import type { CardTypeInCart } from '@/redux/cart/types';
 
-export const calcTotalCount = (itemsInCartFromLS: CardTypeInCart[]) => {
-  if (Array.isArray(itemsInCartFromLS)) {
-    return itemsInCartFromLS && itemsInCartFromLS.reduce((count, item) => item.count + count, 0);
-  }
+export const calcTotalCount = (productsInCartFromLS: CardTypeInCart[]) => {
+	if (Array.isArray(productsInCartFromLS)) {
+		return (
+			productsInCartFromLS &&
+			productsInCartFromLS.reduce((count, item) => item.count + count, 0)
+		);
+	}
 };
 
-export const calcTotalPrice = (itemsInCartFromLS: CardTypeInCart[]) => {
-  if (Array.isArray(itemsInCartFromLS)) {
-    return itemsInCartFromLS && itemsInCartFromLS.reduce((sum, item) => item.price * item.count + sum, 0);
-  }
+export const calcTotalPrice = (productsInCartFromLS: CardTypeInCart[]) => {
+	if (Array.isArray(productsInCartFromLS)) {
+		return (
+			productsInCartFromLS &&
+			productsInCartFromLS.reduce(
+				(sum, item) => item.price * item.count + sum,
+				0
+			)
+		);
+	}
 };
 
-export const calcTotalSalePrice = (itemsInCartFromLS: CardTypeInCart[]) => {
-  if (Array.isArray(itemsInCartFromLS)) {
-    return itemsInCartFromLS && itemsInCartFromLS.reduce((sum, item) => item.salePrice * item.count + sum, 0);
-  }
+export const calcTotalSalePrice = (productsInCartFromLS: CardTypeInCart[]) => {
+	if (Array.isArray(productsInCartFromLS)) {
+		return (
+			productsInCartFromLS &&
+			productsInCartFromLS.reduce(
+				(sum, item) => item.salePrice * item.count + sum,
+				0
+			)
+		);
+	}
 };

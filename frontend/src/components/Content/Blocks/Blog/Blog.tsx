@@ -1,8 +1,7 @@
+import { SelectBlog } from '@/redux/getBlog/selectors';
+import { Status } from '@/redux/getProducts/types';
 import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
-
-import { SelectBlog } from 'redux/getBlog/selectors';
-import { Status } from 'redux/getProducts/types';
 import styles from './Blog.module.scss';
 
 const Blog: React.FC = () => {
@@ -31,7 +30,7 @@ const Blog: React.FC = () => {
 				},
 			},
 			{
-				breakpoint: 641,
+				breakpoint: 769,
 				settings: {
 					slidesToShow: 1,
 				},

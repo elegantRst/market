@@ -1,13 +1,14 @@
+import AddToCartBtn from '@/components/Content/Elements/Buttons/AddToCartBtn';
+import ViewBtn from '@/components/Content/Elements/Buttons/ViewBtn';
+import StarRating from '@/components/Content/Elements/StarRating/StarRating';
+import { SelectAuth } from '@/redux/auth/selectors';
+import type { ProductType } from '@/redux/getProducts/types';
+import { formatNumber } from '@/utils/formatNumbers';
 import React from 'react';
-
-import AddToCartBtn from 'components/Content/Elements/Buttons/AddToCartBtn';
-import ViewBtn from 'components/Content/Elements/Buttons/ViewBtn';
-import StarRating from 'components/Content/Elements/StarRating/StarRating';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { formatNumber } from 'utils/formatNumbers';
 import { tabsList } from '../Gallery';
 import styles from '../Gallery.module.scss';
-import { ProductType } from 'redux/getProducts/types';
 
 type GalleryItemProps = {
 	tabSelected: number;
@@ -20,6 +21,14 @@ const GalleryItem: React.FC<GalleryItemProps> = ({
 	tabListIndex,
 	productType,
 }) => {
+	const { isLogged } = useSelector(SelectAuth);
+
+	if (!productType) {
+		return (
+			<div className={styles.gallery__tabs_tab_content}>Товар не найден</div>
+		);
+	}
+
 	return (
 		<div
 			className={
@@ -46,7 +55,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({
 						</Link>
 						<div className={styles.gallery__tabs_icons}>
 							<ViewBtn itemId={productType?.id} />
-							<AddToCartBtn item={productType} />
+							{isLogged && <AddToCartBtn item={productType} />}
 						</div>
 					</div>
 					<div className={styles.gallery__tabs_box_inner}>

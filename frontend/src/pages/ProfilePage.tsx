@@ -1,25 +1,25 @@
-import TopBar from 'components/Content/Blocks/Profile/TopBar';
+import Dashboard from '@/components/Content/Blocks/Profile/Pages/Dashboard';
+import ProfileCart from '@/components/Content/Blocks/Profile/Pages/ProfileCart';
+import ProfileFeedbacks from '@/components/Content/Blocks/Profile/Pages/ProfileFeedbacks';
+import Settings from '@/components/Content/Blocks/Profile/Pages/Settings';
+import Sidebar from '@/components/Content/Blocks/Profile/Sidebar';
+import TopBar from '@/components/Content/Blocks/Profile/TopBar';
+import Workspace from '@/components/Content/Blocks/Profile/Workspace';
+import { SelectAuth } from '@/redux/auth/selectors';
+import {
+	setLoginModalStatus,
+	setRegisterModalStatus,
+} from '@/redux/auth/slice';
+import { SelectFilters } from '@/redux/filters/selectors';
+import { setMenuUrlValue } from '@/redux/filters/slice';
+import { useAppDispatch } from '@/redux/store';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import MessageIcon from '@mui/icons-material/Message';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { setMenuUrlValue } from 'redux/filters/slice';
-import { SelectAuth } from 'redux/auth/selectors';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SettingsIcon from '@mui/icons-material/Settings';
-import MessageIcon from '@mui/icons-material/Message';
 import styles from '../components/Content/Blocks/Profile/Profile.module.scss';
-import Sidebar from 'components/Content/Blocks/Profile/Sidebar';
-import Workspace from 'components/Content/Blocks/Profile/Workspace';
-import Dashboard from 'components/Content/Blocks/Profile/Pages/Dashboard';
-import ProfileCart from 'components/Content/Blocks/Profile/Pages/ProfileCart';
-import ProfileReviews from 'components/Content/Blocks/Profile/Pages/ProfileReviews';
-import Settings from 'components/Content/Blocks/Profile/Pages/Settings';
-import User from 'components/Content/Blocks/Profile/Pages/User';
-import { setLoginModalStatus, setRegisterModalStatus } from 'redux/auth/slice';
-import { SelectFilters } from 'redux/filters/selectors';
-import { useAppDispatch } from 'redux/store';
-import { fetchCartInProfile } from 'redux/cart/thunks';
-import { token } from 'utils/localStorage/initial';
 
 export type SidebarMenuType = {
 	id: number;
@@ -44,16 +44,12 @@ const profileRoutes: ProfileRoutesType[] = [
 		element: <ProfileCart />,
 	},
 	{
-		path: 'reviews',
-		element: <ProfileReviews />,
+		path: 'feedbacks',
+		element: <ProfileFeedbacks />,
 	},
 	{
 		path: 'settings',
 		element: <Settings />,
-	},
-	{
-		path: 'user',
-		element: <User />,
 	},
 ];
 
@@ -61,7 +57,7 @@ const ProfilePage: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const { user, isLogged } = useSelector(SelectAuth);
 	const { menuUrlValue } = useSelector(SelectFilters);
-	const currentUser = user ? user?.user : '';
+	const currentUser = user && user;
 
 	const sidebarMenu: SidebarMenuType[] = [
 		{
@@ -80,7 +76,7 @@ const ProfilePage: React.FC = () => {
 			id: 2,
 			name: 'Мои отзывы',
 			icon: <MessageIcon />,
-			path: `/profile/${currentUser?.id}/reviews`,
+			path: `/profile/${currentUser?.id}/feedbacks`,
 		},
 		{
 			id: 3,
@@ -91,12 +87,8 @@ const ProfilePage: React.FC = () => {
 	];
 
 	useEffect(() => {
-		// dispatch(fetchCartInProfile(token));
-	}, []);
-
-	useEffect(() => {
 		dispatch(setMenuUrlValue(''));
-	}, [menuUrlValue]);
+	}, [menuUrlValue, dispatch]);
 
 	const Login = () => {
 		dispatch(setLoginModalStatus(true));

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getNotificationFromLS } from "utils/notificationLS/getNotificationFromLS";
-import { NotificationSliceState } from "./types";
+import { getNotificationFromLS } from "@/utils/notificationLS/getNotificationFromLS"; 
+import type { NotificationSliceState } from './types'
 
 const { notificationFromLS } = getNotificationFromLS();
 

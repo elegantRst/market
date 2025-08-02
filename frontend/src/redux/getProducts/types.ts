@@ -6,22 +6,31 @@ export type ProductType = {
 	featured: boolean;
 	id: number;
 	imageUrl: string;
-	inStock: string;
+	inStock: boolean;
 	name: string;
 	price: number;
-	rating: string;
+	rating: number;
 	salePrice: number;
 	slides?: string[] | undefined;
 	recommend?: boolean;
 	salehit?: boolean;
 	saler?: boolean;
 	bestRating?: boolean;
+	saveImage?: string;
 };
-export enum Status {
-	LOADING = 'loading',
-	SUCCESS = 'success',
-	ERROR = 'error',
-}
+
+export type ProductTypeForTable = Omit<ProductType, 'category'> & {
+	category: string;
+};
+
+export const Status = {
+	LOADING: 'loading',
+	SUCCESS: 'success',
+	ERROR: 'error',
+} as const;
+
+export type Status = (typeof Status)[keyof typeof Status];
+
 export type activeSort = {
 	name: string;
 	value: string;

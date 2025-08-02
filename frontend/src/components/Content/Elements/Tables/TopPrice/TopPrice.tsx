@@ -1,27 +1,27 @@
-import { DataGrid, GridColDef, ruRU } from '@mui/x-data-grid';
+import { DataGrid, ruRU, type GridColDef } from '@mui/x-data-grid';
 
 import { useSelector } from 'react-redux';
 
+import { categoriesList } from '@/redux/filters/consts';
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
+import type { ProductTypeForTable } from '@/redux/getProducts/types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { categoriesList } from 'redux/filters/consts';
 import styles from './Tables.module.scss';
-import { SelectGetProducts } from 'redux/getProducts/selectors';
-import { ProductType } from 'redux/getProducts/types';
 
 const TopPrice: React.FC = () => {
 	const { productsAll } = useSelector(SelectGetProducts);
-	const [array, setArray] = useState<ProductType[]>([]);
+	const [array, setArray] = useState<ProductTypeForTable[]>([]);
 
 	useEffect(() => {
-		const changedArray = productsAll?.map(item => {
-			for (let i = 0; i < categoriesList.length; i++) {
-				if (item?.category === i) {
-					return { ...item, category: categoriesList[i].name };
-				}
-			}
-		});
-		// @ts-ignore
+		const changedArray =
+			productsAll?.map(item => {
+				const categoryObj = categoriesList[item?.category];
+				return {
+					...item,
+					category: categoryObj ? categoryObj.name : 'Неизвестно',
+				};
+			}) || [];
 		setArray(changedArray);
 	}, [productsAll]);
 

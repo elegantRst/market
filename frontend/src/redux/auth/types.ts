@@ -1,34 +1,38 @@
-import { ReviewInProfileType } from "redux/getReview/types";
+import type { FeedbacksType } from '../getFeedbacks/types';
 
 export type User = {
-  user: any;
-  id: number;
-  firstName: string;
-  userName: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  feedback: [ReviewInProfileType];
-  token?: string;
+	user: any;
+	id: number;
+	name: string;
+	login: string;
+	email: string;
+	createdAt: string;
+	updatedAt: string;
+	feedback: [FeedbacksType];
+	access_token?: string;
 };
 
 export interface AuthSliceState {
-  user: User;
-  isLogged: boolean;
-  registerModalStatus: boolean;
-  loginModalStatus: boolean;
-  requestError: string;
-  isLoading: boolean;
+	user: User;
+	isLogged: boolean;
+	registerModalStatus: boolean;
+	loginModalStatus: boolean;
+	requestError: string;
+	isLoading: boolean;
+	createdDate: string;
+	createdTime: string;
+	updatedDate: string;
+	updatedTime: string;
 }
 
 export interface ILoginData {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 }
 
 export interface IRegisterData {
-  firstName: string;
-  userName: string;
-  email: string;
-  password: string;
+	name: string;
+	login: string;
+	email: string;
+	password: string;
 }

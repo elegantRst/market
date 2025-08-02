@@ -1,20 +1,20 @@
+import { categoriesList } from '@/redux/filters/consts';
+import { setActiveCategory, setCurrentPage } from '@/redux/filters/slice';
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import { categoriesList } from 'redux/filters/consts';
-import { setActiveCategory, setCurrentPage } from 'redux/filters/slice';
-import { SelectGetProducts } from 'redux/getProducts/selectors';
 import styles from './FilterCategory.module.scss';
 
 const FilterCategory: React.FC = () => {
 	const dispatch = useDispatch();
 	const { productsAll } = useSelector(SelectGetProducts);
 
-	const countOfItemsInCategory = index => {
+	const countOfItemsInCategory = (index: number) => {
 		return productsAll.reduce((count, item) => {
 			return Number(item.category) === index ? count + 1 : count;
 		}, 0);
 	};
 
-	const changeCategory = index => {
+	const changeCategory = (index: number) => {
 		dispatch(setActiveCategory(index));
 		dispatch(setCurrentPage(1));
 	};

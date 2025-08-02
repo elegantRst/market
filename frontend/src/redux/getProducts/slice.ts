@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { GetProductsSliceState, Status } from './types';
 import { fetchProducts, fetchProductsByFilter } from './thunks';
+import { Status, type GetProductsSliceState } from './types';
 
 const initialState: GetProductsSliceState = {
 	productsCount: 0,

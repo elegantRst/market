@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
-import { defaultPriceMax, defaultPriceMin } from 'redux/filters/consts';
-import { SelectFilters } from 'redux/filters/selectors';
+import { defaultPriceMax, defaultPriceMin } from '@/redux/filters/consts';
+import { SelectFilters } from '@/redux/filters/selectors';
 import {
 	setActiveCategory,
 	setActiveColor,
@@ -10,10 +9,11 @@ import {
 	setCurrentPage,
 	setFilterUrl,
 	setPriceMinMax,
-} from 'redux/filters/slice';
-import { useAppDispatch } from 'redux/store';
+} from '@/redux/filters/slice';
+import { fetchProductsByFilter } from '@/redux/getProducts/thunks';
+import { useAppDispatch } from '@/redux/store';
+import { useSelector } from 'react-redux';
 import styles from './ResetFilters.module.scss';
-import { fetchProductsByFilter } from 'redux/getProducts/thunks';
 
 const ResetFilters = () => {
 	const dispatch = useAppDispatch();

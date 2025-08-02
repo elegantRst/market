@@ -3,16 +3,18 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { setSearchModal, setSearchValue } from 'redux/filters/slice';
-
-import { SelectFilters } from 'redux/filters/selectors';
-import { useAppDispatch } from 'redux/store';
+import { setSearchModal, setSearchValue } from '@/redux/filters/slice';
+import { SelectFilters } from '@/redux/filters/selectors';
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
+import type { ProductType } from '@/redux/getProducts/types';
+import { useAppDispatch } from '@/redux/store';
 import styles from './Search.module.scss';
-import { SelectGetProducts } from 'redux/getProducts/selectors';
-import { ProductType } from 'redux/getProducts/types';
 
-const Search = ({ scrollPosition }) => {
+type SearchPropsType = {
+	scrollPosition: number;
+};
+
+const Search: React.FC<SearchPropsType> = ({ scrollPosition }) => {
 	const dispatch = useAppDispatch();
 	const { searchValue, searchModal } = useSelector(SelectFilters);
 
@@ -20,14 +22,13 @@ const Search = ({ scrollPosition }) => {
 	const searchRef = useRef(null);
 
 	const { register, handleSubmit } = useForm({ mode: 'onChange' });
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const updateInput = useCallback(
-		debounce(data => {
+		debounce((data: any) => {
 			dispatch(setSearchValue(data));
 		}, 1000),
 		[]
 	);
-	const onChangeInput = data => {
+	const onChangeInput = (data: any) => {
 		if (data.Search) {
 			updateInput(data);
 			dispatch(setSearchModal(true));
@@ -37,7 +38,7 @@ const Search = ({ scrollPosition }) => {
 	};
 
 	useEffect(() => {
-		const handleClickOutside = event => {
+		const handleClickOutside = (event: MouseEvent | TouchEvent) => {
 			if (
 				searchRef.current &&
 				!event.composedPath().includes(searchRef.current)

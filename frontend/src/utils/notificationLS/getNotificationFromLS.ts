@@ -1,7 +1,7 @@
-import { NotificationInfo } from "redux/notification/types";
+import type { NotificationInfo } from '@/redux/notification/types';
 
 export const getNotificationFromLS = () => {
-  const data = localStorage.getItem("notification");
-  const notificationFromLS: NotificationInfo[] = data ? JSON.parse(data) : [];
-  return { notificationFromLS };
+	const data = localStorage.getItem('notification');
+	const notificationFromLS: NotificationInfo[] = data ? JSON.parse(data) : [];
+	return { notificationFromLS };
 };

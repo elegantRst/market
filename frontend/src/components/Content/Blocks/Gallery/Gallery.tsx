@@ -1,14 +1,12 @@
+import { SelectGetProducts } from '@/redux/getProducts/selectors';
+import { Status } from '@/redux/getProducts/types';
+import { findProductByAttribute } from '@/utils/findProductByAttribute';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Status } from 'redux/getProducts/types';
-import { findProductByAttribute } from 'utils/findProductByAttribute';
-import GalleryItem from './GalleryItem/GalleryItem';
-
 import banner from '../../../../assets/images/gallery/banner.jpg';
-
 import styles from './Gallery.module.scss';
-import { SelectGetProducts } from 'redux/getProducts/selectors';
+import GalleryItem from './GalleryItem/GalleryItem';
 
 export const tabsList = [
 	{ id: 0, title: 'Рекомендуемое' },

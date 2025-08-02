@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Status } from 'redux/getProducts/types';
 import { fetchShowroom } from './thunks';
-import { ShowroomSliceState } from './types';
+import type { ShowroomSliceState } from './types';
+import { Status } from '../getProducts/types';
 
 const initialState: ShowroomSliceState = {
 	items: [],

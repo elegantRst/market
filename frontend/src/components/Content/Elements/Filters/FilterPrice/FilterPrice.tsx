@@ -1,32 +1,23 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import ReactSlider from 'react-slider';
-
+import { SelectFilters } from '@/redux/filters/selectors';
+import { setCurrentPage, setPriceMinMax } from '@/redux/filters/slice';
+import { useAppDispatch } from '@/redux/store';
 import {
 	formatPrice,
-	localPriceFormattedMin,
 	localPriceFormattedMax,
-} from 'utils/formatNumbers';
-import { useAppDispatch } from 'redux/store';
-import { SelectFilters } from 'redux/filters/selectors';
-
-import { setCurrentPage, setPriceMinMax } from 'redux/filters/slice';
-
+	localPriceFormattedMin,
+} from '@/utils/formatNumbers';
+import { useSelector } from 'react-redux';
+import ReactSlider from 'react-slider';
 import './FilterPrice.module.scss';
 import styles from './FilterPrice.module.scss';
 
 const FilterPrice = () => {
 	const dispatch = useAppDispatch();
 	const { priceMinMax } = useSelector(SelectFilters);
-	const [localPrice, setLocalPrice] = useState([
-		priceMinMax[0],
-		priceMinMax[1],
-	]);
 
 	formatPrice(priceMinMax);
 
 	const onClickPriceChange = (value: number[]) => {
-		setLocalPrice(value);
 		dispatch(setCurrentPage(1));
 		dispatch(setPriceMinMax(value));
 	};

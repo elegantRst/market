@@ -1,27 +1,30 @@
-import { addItemInCart, setCartModalStatus } from "redux/cart/slice";
-import { pushCartToProfile } from "redux/cart/thunks";
-import { ntfMessagePlusToCart, ntfTypePlusToCart } from "redux/notification/consts";
-import { DispatchNotification } from "./notificationDispatch";
-import { store } from "redux/store";
+import { setCartModalStatus } from '@/redux/cart/slice';
+import { addToCart, fetchGetCart } from '@/redux/cart/thunks';
+import {
+	ntfMessagePlusToCart,
+	ntfTypePlusToCart,
+} from '@/redux/notification/consts';
+import { store } from '@/redux/store';
+import { DispatchNotification } from './notificationDispatch';
 
-export const OnClickAddToCart = async (item, isLogged) => {
-  const itemForCart = {
-    productId: item.id,
-    imageUrl: item.imageUrl,
-    name: item.name,
-    price: item.price,
-    salePrice: item.salePrice,
-    count: 1,
-    currentTotalPrice: item.price,
-    currentTotalSalePrice: item.salePrice,
-  };
-
-  if (isLogged) {
-    store.dispatch(pushCartToProfile(itemForCart));
-    DispatchNotification(true, itemForCart, ntfMessagePlusToCart, ntfTypePlusToCart);
-  } else {
-    store.dispatch(addItemInCart(itemForCart));
-  }
-
-  store.dispatch(setCartModalStatus(true));
+export const OnClickAddToCart = async ({ product }: any) => {
+	const productForCart = {
+		productId: product.id,
+		imageUrl: product.imageUrl,
+		name: product.name,
+		price: product.price,
+		salePrice: product.salePrice,
+		count: 1,
+		currentTotalPrice: product.price,
+		currentTotalSalePrice: product.salePrice,
+	};
+	await store.dispatch(addToCart(productForCart));
+	await store.dispatch(fetchGetCart());
+	DispatchNotification(
+		true,
+		productForCart,
+		ntfMessagePlusToCart,
+		ntfTypePlusToCart
+	);
+	store.dispatch(setCartModalStatus(true));
 };

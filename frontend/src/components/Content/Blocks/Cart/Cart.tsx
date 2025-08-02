@@ -1,115 +1,83 @@
-import { useEffect, useState } from 'react';
+import AddToCartCalcform from '@/components/Content/Elements/Buttons/AddToCartCalcform';
+import DeleteFromCartBtn from '@/components/Content/Elements/Buttons/DeleteFromCartBtn';
+import { SelectAuth } from '@/redux/auth/selectors';
+import { SelectCart } from '@/redux/cart/selectors';
+import { setOrderModalStatus } from '@/redux/cart/slice';
+import { clearCart, fetchGetCart } from '@/redux/cart/thunks';
+import { useAppDispatch } from '@/redux/store';
+import { formatNumber } from '@/utils/formatNumbers';
+import { normalize_count_form } from '@/utils/normalizeWordsForm';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { normalize_count_form } from 'utils/normalizeWordsForm';
-import { formatNumber } from 'utils/formatNumbers';
-
-import {
-	clearCart,
-	setCartModalStatus,
-	setOrderModalStatus,
-} from 'redux/cart/slice';
-
-import AddToCartCalcform from 'components/Content/Elements/Buttons/AddToCartCalcform';
-import DeleteFromCartBtn from 'components/Content/Elements/Buttons/DeleteFromCartBtn';
-
 import styles from './Cart.module.scss';
-import { SelectCart } from 'redux/cart/selectors';
-import { useAppDispatch } from 'redux/store';
-import { clearCartInProfile, fetchCartInProfile } from 'redux/cart/thunks';
-import { SelectAuth } from 'redux/auth/selectors';
-import { CardTypeInCart } from 'redux/cart/types';
-import { token } from 'utils/localStorage/initial';
+import type { CardTypeInCart } from '@/redux/cart/types';
 
 const Cart: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { user, isLogged } = useSelector(SelectAuth);
-	const { itemsInCart, totalPrice, totalSalePrice, totalCount, cartInProfile } =
-		useSelector(SelectCart);
-	const [currentArrayInCart, setCurrentArrayInCart] = useState<
-		CardTypeInCart[]
-	>([]);
-	const [currentPrice, setCurrentPrice] = useState<number>();
-	const [currentSalePrice, setCurrentSalePrice] = useState<number>();
-	const [currentCount, setCurrentCount] = useState<number>();
+	const { isLogged } = useSelector(SelectAuth);
+	const { productsInCart } = useSelector(SelectCart);
 
-	const userCart: any = localStorage.getItem('userCart');
-
-	const sumCountInProfileCart = () => {
-		const parsedUserCart: any = JSON.parse(userCart);
-		let totalSum = 0;
-		parsedUserCart?.forEach(item => {
-			totalSum += item.count;
-		});
-		return totalSum;
-	};
-
-	const sumPriceInProfileCart = () => {
-		const parsedUserCart: any = JSON.parse(userCart);
-		let totalSum = 0;
-		parsedUserCart?.forEach(item => {
-			totalSum += item.price * item.count;
-		});
-		return totalSum;
-	};
-
-	const sumSalePriceInProfileCart = () => {
-		const parsedUserCart: any = JSON.parse(userCart);
-		let totalSumSalePrice = 0;
-		parsedUserCart?.forEach(item => {
-			totalSumSalePrice += item.salePrice * item.count;
-		});
-		return totalSumSalePrice;
-	};
-
-	useEffect(() => {
-		// dispatch(fetchCartInProfile(token));
-	}, []);
-
-	useEffect(() => {
-		dispatch(setCartModalStatus(false));
-		if (isLogged) {
-			setCurrentArrayInCart(cartInProfile);
-			setCurrentPrice(sumPriceInProfileCart());
-			setCurrentSalePrice(sumSalePriceInProfileCart());
-			setCurrentCount(sumCountInProfileCart());
-		} else {
-			setCurrentArrayInCart(itemsInCart);
-			setCurrentPrice(totalPrice);
-			setCurrentSalePrice(totalSalePrice);
-			setCurrentCount(totalCount);
+	const sumCountInCart = () => {
+		const cart = localStorage.getItem('cart');
+		if (!cart) return 0;
+		try {
+			const parsedCart = JSON.parse(cart);
+			return parsedCart.reduce(
+				(sum: number, item: CardTypeInCart) => sum + item.count,
+				0
+			);
+		} catch (error) {
+			console.error('Failed to parse cart from localStorage', error);
+			return 0;
 		}
-	}, [userCart]);
+	};
+	const sumPriceInCart = () => {
+		const cart = localStorage.getItem('cart');
+		if (!cart) return 0;
+		try {
+			const parsedCart = JSON.parse(cart);
+			return parsedCart.reduce(
+				(sum: number, item: CardTypeInCart) => sum + item.price * item.count,
+				0
+			);
+		} catch (error) {
+			console.error('Failed to parse cart from localStorage', error);
+			return 0;
+		}
+	};
+	const sumSalePriceInCart = () => {
+		const cart = localStorage.getItem('cart');
+		if (!cart) return 0;
+		try {
+			const parsedCart = JSON.parse(cart);
+			return parsedCart.reduce(
+				(sum: number, item: CardTypeInCart) =>
+					sum + item.salePrice * item.count,
+				0
+			);
+		} catch (error) {
+			console.error('Failed to parse cart from localStorage', error);
+			return 0;
+		}
+	};
 
 	const onClickOrder = () => {
 		dispatch(setOrderModalStatus(true));
 	};
 
-	const onClickClear = () => {
-		if (isLogged) {
-			dispatch(clearCartInProfile(user.user.id));
-			localStorage.removeItem('userCart');
-		} else {
-			dispatch(clearCart());
-			localStorage.removeItem('cart');
-		}
-		// window.location.reload();
+	const onClickClear = async () => {
+		localStorage.removeItem('cart');
+		await dispatch(clearCart());
+		await dispatch(fetchGetCart());
 	};
 
 	return (
 		<>
 			<div className={styles.cart}>
-				{currentArrayInCart?.length > 0 ? (
+				{productsInCart.length > 0 ? (
 					<div className={styles.cart__inner}>
 						<div className={styles.cart__left}>
-							<div className={styles.cart__title}>
-								Корзина
-								<span>
-									{currentCount && currentCount}{' '}
-									{currentCount && normalize_count_form(currentCount)}
-								</span>
-							</div>
+							<div className={styles.cart__title}>Корзина</div>
 							<div
 								className={styles.cart__clearbtn}
 								onClick={() => onClickClear()}
@@ -117,7 +85,7 @@ const Cart: React.FC = () => {
 								Очистить корзину
 							</div>
 							<div className={styles.cart__items}>
-								{currentArrayInCart.map((item, index) => (
+								{productsInCart.map((item, index) => (
 									<div className={styles.cart__item} key={index}>
 										<Link
 											className={styles.cart__item_image}
@@ -160,39 +128,23 @@ const Cart: React.FC = () => {
 							<div className={styles.cart__results}>
 								<div className={styles.cart__profit}>
 									<div className={styles.cart__profit_text}>
-										{currentCount}{' '}
-										{currentCount && normalize_count_form(currentCount)}
+										{sumCountInCart()}
+										{normalize_count_form(sumCountInCart())}
 									</div>
 									<div className={styles.cart__profit_price}>
-										{currentPrice &&
-											formatNumber(
-												isLogged ? sumPriceInProfileCart() : currentPrice
-											)}{' '}
-										₽
+										{formatNumber(sumPriceInCart())} ₽
 									</div>
 								</div>
 								<div className={styles.cart__profit}>
 									<div className={styles.cart__profit_text}>Скидка</div>
 									<div className={styles.cart__profit_profitprice}>
-										{currentPrice &&
-											currentSalePrice &&
-											formatNumber(
-												isLogged
-													? sumPriceInProfileCart() -
-															sumSalePriceInProfileCart()
-													: currentPrice - currentSalePrice
-											)}{' '}
-										₽
+										{formatNumber(sumPriceInCart() - sumSalePriceInCart())} ₽
 									</div>
 								</div>
 								<div className={styles.cart__result}>
 									<div className={styles.cart__result_text}>Итого</div>
-									{/* @ts-ignore */}
 									<div className={styles.cart__result_price}>
-										{formatNumber(
-											isLogged ? sumSalePriceInProfileCart() : totalSalePrice
-										)}{' '}
-										₽
+										{formatNumber(sumSalePriceInCart())}₽
 									</div>
 								</div>
 								<div
@@ -209,7 +161,11 @@ const Cart: React.FC = () => {
 						<div className={styles.cart__left}>
 							<div className={styles.cart__title}>Корзина</div>
 							<div className={styles.cart__items}>
-								У вас нет добавленных в корзину товаров!
+								{isLogged ? (
+									<p>У вас нет добавленных в корзину товаров!</p>
+								) : (
+									<p>Войдите в ваш аккаунт для добавления товаров в корзину</p>
+								)}
 							</div>
 						</div>
 					</div>
